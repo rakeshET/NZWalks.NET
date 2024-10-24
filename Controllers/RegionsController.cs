@@ -21,79 +21,83 @@ namespace NZWalks.API.Controllers
         //GET ALL REGIONS
         [HttpGet]
         public IActionResult GetAll()
-        {
-            //GET DATA FROM DATABASE - DOMAIN MODELS
-            var regionsDomain = dbContext.Regions.ToList();
-
-            //Map domain models to DTOs
-            var regionsDto = new List<RegionDto>();
-            foreach (var regions in regionsDomain)
             {
-                regionsDto.Add(new RegionDto()
+                //GET DATA FROM DATABASE - DOMAIN MODELS
+                var regionsDomain = dbContext.Regions.ToList();
+
+                //Map domain models to DTOs
+                var regionsDto = new List<RegionDto>();
+                foreach (var regions in regionsDomain)
                 {
-                    Id = regions.Id,
-                    Name = regions.Name,
-                    Code = regions.Code,
-                    RegionImageUrl = regions.RegionImageUrl
-                });
+                    regionsDto.Add(new RegionDto()
+                    {
+                        Id = regions.Id,
+                        Name = regions.Name,
+                        Code = regions.Code,
+                        RegionImageUrl = regions.RegionImageUrl
+                    });
+                }
+                //return DTOs
+                return Ok(regionsDto);
             }
-            //return DTOs
-            return Ok(regionsDto);
-        }
         //GET REGION BY ID
         [HttpGet]
         [Route("{id:Guid}")]
         public IActionResult GetById([FromRoute]Guid id)
-        {
-            //var region = dbContext.Regions.Find(id);
-            //Get region domai model from dataBase
-            var region = dbContext.Regions.FirstOrDefault(x=> x.Id == id);
-            if(region == null)
             {
-                return NotFound();
+                //var region = dbContext.Regions.Find(id);
+                //Get region domai model from dataBase
+                var region = dbContext.Regions.FirstOrDefault(x=> x.Id == id);
+                if(region == null)
+                {
+                    return NotFound();
+                }
+                //Map region domain model to region DTO
+                var regionDto = new RegionDto{
+                    Id = region.Id,
+                    Name = region.Name,
+                    Code = region.Code,
+                    RegionImageUrl = region.RegionImageUrl
+                };
+
+
+                return Ok(regionDto);
             }
-            //Map region domain model to region DTO
-            var regionDto = new RegionDto{
-                Id = region.Id,
-                Name = region.Name,
-                Code = region.Code,
-                RegionImageUrl = region.RegionImageUrl
-            };
-
-
-            return Ok(regionDto);
-        }
 
         [HttpPost]
         public IActionResult Create([FromBody]AddRegionRequestDto addRegionRequestDto)
-        {
-            //Map or convert DTo to domain model
-
-            var regionDomainModel = new Region
             {
-                Code = addRegionRequestDto.Code,
-                Name = addRegionRequestDto.Name,
-                RegionImageUrl = addRegionRequestDto.RegionImageUrl
-            };
-            //Use domain model to create db context
+                //Map or convert DTo to domain model
 
-            dbContext.Regions.Add(regionDomainModel); 
-            dbContext.SaveChanges();
+                var createdRegions = new List<RegionDto>();
+                foreach (var regionrequest in addRegionRequestDto.Regions)
+                {
+                    var regionDomainModel = new Region
+                    {
+                        Code = regionrequest.Code,
+                        Name = regionrequest.Name,
+                        RegionImageUrl = regionrequest.RegionImageUrl
+                    };
+                    //Use domain model to create db context
 
-            //Map domain model back to dto
+                    dbContext.Regions.Add(regionDomainModel);
+                    dbContext.SaveChanges();
 
-            var regionDto = new RegionDto
-            {
-                Id = regionDomainModel.Id,
-                Name = regionDomainModel.Name,
-                Code = regionDomainModel.Code,
-                RegionImageUrl = regionDomainModel.RegionImageUrl
-            };
+                    //Map domain model back to dto
 
-            return CreatedAtAction(nameof(GetById),new {id = regionDto.Id},regionDto);
+                    var regionDto = new RegionDto
+                    {
+                        Id = regionDomainModel.Id,
+                        Name = regionDomainModel.Name,
+                        Code = regionDomainModel.Code,
+                        RegionImageUrl = regionDomainModel.RegionImageUrl
+                    };
+                    createdRegions.Add(regionDto);
+                }
+                return CreatedAtAction(nameof(GetById), new { id = createdRegions.First().Id }, createdRegions.First());
 
-        }
-    
-    
+            }
+
+
     }
 }
