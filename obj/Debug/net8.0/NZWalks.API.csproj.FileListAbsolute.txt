@@ -108,3 +108,4 @@ C:\Users\Rakesh\Desktop\Edstem\C#\Youtube\NZWalks.API\NZWalks.API\bin\Debug\net8
 C:\Users\Rakesh\Desktop\Edstem\C#\Youtube\NZWalks.API\NZWalks.API\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.resources.dll
 C:\Users\Rakesh\Desktop\Edstem\C#\Youtube\NZWalks.API\NZWalks.API\bin\Debug\net8.0\Npgsql.dll
 C:\Users\Rakesh\Desktop\Edstem\C#\Youtube\NZWalks.API\NZWalks.API\bin\Debug\net8.0\Npgsql.EntityFrameworkCore.PostgreSQL.dll
+C:\Users\Rakesh\Desktop\Edstem\C#\Youtube\NZWalks.API\NZWalks.API\obj\Debug\net8.0\NZWalks.API.sourcelink.json
